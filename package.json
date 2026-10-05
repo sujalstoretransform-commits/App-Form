@@ -1,0 +1,25 @@
+{
+  "name": "app-form",
+  "version": "1.0.0",
+  "main": "web/index.js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "shopify": "shopify",
+    "build": "shopify app build",
+    "dev": "shopify app dev",
+    "info": "shopify app info",
+    "generate": "shopify app generate",
+    "deploy": "shopify app deploy"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  },
+  "author": "StoreTransform",
+  "private": true,
+  "workspaces": [
+    "extensions/*",
+    "web",
+    "web/frontend"
+  ]
+}
