@@ -12,6 +12,8 @@ import { Form } from "./models/form.js";
 import mongoose from "mongoose";
 import 'dotenv/config';
 
+process.on("unhandledRejection", (r) => console.error("Unhandled:", r));
+
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
   10
@@ -41,21 +43,25 @@ app.post(
 
 app.get("/api/mongo-test", async (_req, res) => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await connectDB();
     res.json({ success: true, message: "MongoDB connected" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 // app.use("/api/*", shopify.validateAuthenticatedSession());
 app.use("/api/{*splat}", shopify.validateAuthenticatedSession());
 
-connectDB();
+app.use(async (_req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (e) {
+    console.error("DB connect failed:", e.message);
+    res.status(503).json({ error: "Database unavailable" });
+  }
+});
 
 app.use(express.json());
 
@@ -121,5 +127,9 @@ app.use("/{*splat}", shopify.ensureInstalledOnShop(), async (_req, res, _next) =
 });
 
 // app.listen(PORT);
+
+if (!process.env.VERCEL) {
+  app.listen(PORT);
+}
 
 export default app;
