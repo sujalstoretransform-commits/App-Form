@@ -10,10 +10,12 @@ embedded = true
 scopes = ""
 
 [auth]
-redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
+redirect_urls = [
+  "https://app-form-tau.vercel.app/api/auth/callback"
+]
 
 [webhooks]
-api_version = "2027-01"
+api_version = "2025-07"
 
 [build]
 automatically_update_urls_on_dev = true
