@@ -9,6 +9,8 @@ import productCreator from "./product-creator.js";
 import PrivacyWebhookHandlers from "./privacy.js";
 import { connectDB } from "./config/db.js";
 import { Form } from "./models/form.js";
+import mongoose from "mongoose";
+import 'dotenv/config';
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -57,6 +59,19 @@ app.get("/api/products/count", async (_req, res) => {
   `);
 
   res.status(200).send({ count: countData.data.productsCount.count });
+});
+
+app.get("/mongo-test", async (_req, res) => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    res.json({ success: true, message: "MongoDB connected" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
 });
 
 app.post("/api/form/create", async (req, res) => {
