@@ -1,14 +1,10 @@
-import { useState } from "react"
-import { useAppBridge } from "@shopify/app-bridge-react"
-import axios from "axios"
+﻿import { useState } from "react"
 
 export default function ApplicationForm() {
-    const shopify = useAppBridge();
     const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', dateOfBirth: '' })
     const [message, setMessage] = useState('')
     const [submitted, setSubmitted] = useState(false)
     const [loading, setLoading] = useState(false)
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,8 +16,7 @@ export default function ApplicationForm() {
                 ...formData,
                 [name]: onlyNumbers
             });
-        }
-        else {
+        } else {
             setFormData({
                 ...formData,
                 [name]: value
@@ -48,13 +43,12 @@ export default function ApplicationForm() {
                 console.log(resData.message);
                 setMessage(resData.message);
                 setSubmitted(true);
-            }
-            else {
-                setMessage(resData.error);
+            } else {
+                setMessage(resData.error || 'Something went wrong');
             }
         } catch (error) {
-            console.log("Submission Error: ", error)
-            setMessage(error.response?.data?.error)
+            console.log('Submission Error: ', error)
+            setMessage(error instanceof Error ? error.message : 'Submission failed')
         } finally {
             setLoading(false)
             setFormData({ firstName: '', lastName: '', email: '', phone: '', dateOfBirth: '' })
@@ -117,8 +111,8 @@ export default function ApplicationForm() {
                                 placeholder="Enter your phone number"
                                 onChange={handleChange}
                                 value={formData.phone}
-                                minlength={10}
-                                maxlength={10}
+                                minLength={10}
+                                maxLength={10}
                                 required
                             />
                         </div>
@@ -139,8 +133,9 @@ export default function ApplicationForm() {
                             <button
                                 type="submit"
                                 className='bg-blue-500 text-white font-medium rounded h-auto w-auto p-2 hover:bg-blue-600'
+                                disabled={loading}
                             >
-                                SUBMIT</button>
+                                {loading ? 'Submitting...' : 'SUBMIT'}</button>
                         </div>
                     </div>
                 </form >
