@@ -10,6 +10,7 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "web/index.js" },
+    { "src": "/proxy/(.*)", "dest": "web/index.js" },
     { "src": "/assets/(.*)", "dest": "web/frontend/assets/$1" },
     { "src": "/(.*\\..*)", "dest": "web/frontend/$1" },
     { "src": "/(.*)", "dest": "web/frontend/index.html" }

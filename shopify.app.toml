@@ -18,4 +18,9 @@ redirect_urls = [
 api_version = "2025-07"
 
 [build]
-automatically_update_urls_on_dev = true
+automatically_update_urls_on_dev = false
+
+[app_proxy]
+url = "https://app-form-tau.vercel.app/proxy"
+subpath = "form"
+prefix = "apps"
