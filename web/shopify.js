@@ -1,4 +1,4 @@
-import { BillingInterval, LATEST_API_VERSION } from "@shopify/shopify-api";
+import { BillingInterval } from "@shopify/shopify-api";
 import { shopifyApp } from "@shopify/shopify-app-express";
 import { MongoDBSessionStorage } from "@shopify/shopify-app-session-storage-mongodb";
 import { restResources } from "@shopify/shopify-api/rest/admin/2024-10";
@@ -20,7 +20,7 @@ const shopify = shopifyApp({
     apiKey: process.env.SHOPIFY_API_KEY,
     apiSecretKey: process.env.SHOPIFY_API_SECRET,
     hostName: "app-form-tau.vercel.app",
-    apiVersion: LATEST_API_VERSION,
+    apiVersion: "2025-07",
     restResources,
     future: {
       customerAddressDefaultFix: true,
