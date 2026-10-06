@@ -36,6 +36,8 @@ const shopify = shopifyApp({
   },
   // This should be replaced with your preferred storage strategy
   sessionStorage: new SQLiteSessionStorage(DB_PATH),
+
+  hostName: "app-form-tau.vercel.app",
 });
 
 export default shopify;
