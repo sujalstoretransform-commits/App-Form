@@ -52,7 +52,8 @@ app.get("/api/mongo-test", async (_req, res) => {
   }
 });
 
-app.use("/api/*", shopify.validateAuthenticatedSession());
+// app.use("/api/*", shopify.validateAuthenticatedSession());
+app.use("/api/{*splat}", shopify.validateAuthenticatedSession());
 
 connectDB();
 
