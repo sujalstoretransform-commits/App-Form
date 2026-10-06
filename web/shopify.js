@@ -18,6 +18,9 @@ const billingConfig = {
 
 const shopify = shopifyApp({
   api: {
+    apiKey: process.env.SHOPIFY_API_KEY,
+    apiSecretKey: process.env.SHOPIFY_API_SECRET,
+    hostName: "app-form-tau.vercel.app",
     apiVersion: LATEST_API_VERSION,
     restResources,
     future: {
@@ -37,7 +40,6 @@ const shopify = shopifyApp({
   // This should be replaced with your preferred storage strategy
   sessionStorage: new SQLiteSessionStorage(DB_PATH),
 
-  hostName: "app-form-tau.vercel.app",
 });
 
 export default shopify;
