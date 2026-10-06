@@ -39,18 +39,6 @@ app.post(
 // If you are adding routes outside of the /api path, remember to
 // also add a proxy rule for them in web/frontend/vite.config.js
 
-app.get("/api/mongo-test", async (_req, res) => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    res.json({ success: true, message: "MongoDB connected" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
-  }
-});
 
 // app.use("/api/*", shopify.validateAuthenticatedSession());
 app.use("/api/{*splat}", shopify.validateAuthenticatedSession());
@@ -73,6 +61,19 @@ app.get("/api/products/count", async (_req, res) => {
   `);
 
   res.status(200).send({ count: countData.data.productsCount.count });
+});
+
+app.get("/api/mongo-test", async (_req, res) => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    res.json({ success: true, message: "MongoDB connected" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
 });
 
 app.post("/api/form/create", async (req, res) => {
