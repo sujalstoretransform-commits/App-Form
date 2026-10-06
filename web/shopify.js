@@ -1,8 +1,7 @@
 import { BillingInterval } from "@shopify/shopify-api";
 import { shopifyApp } from "@shopify/shopify-app-express";
 import { MongoDBSessionStorage } from "@shopify/shopify-app-session-storage-mongodb";
-import { restResources } from "@shopify/shopify-api/rest/admin/2024-10";
-
+import { restResources } from "@shopify/shopify-api/rest/admin/2025-07";
 
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
