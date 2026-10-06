@@ -11,6 +11,7 @@ import { connectDB } from "./config/db.js";
 import { Form } from "./models/form.js";
 import mongoose from "mongoose";
 import 'dotenv/config';
+import crypto from "crypto";
 
 process.on("unhandledRejection", (r) => console.error("Unhandled:", r));
 
@@ -47,6 +48,48 @@ app.get("/api/mongo-test", async (_req, res) => {
     res.json({ success: true, message: "MongoDB connected" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+function verifyProxy(query) {
+  const { signature, ...rest } = query;
+  if (!signature) return false;
+  const message = Object.keys(rest)
+    .sort()
+    .map((k) => `${k}=${Array.isArray(rest[k]) ? rest[k].join(",") : rest[k]}`)
+    .join("");
+  const digest = crypto
+    .createHmac("sha256", process.env.SHOPIFY_API_SECRET)
+    .update(message)
+    .digest("hex");
+  try {
+    return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
+  } catch {
+    return false;
+  }
+}
+
+app.post("/proxy/submit", express.json(), async (req, res) => {
+  if (!verifyProxy(req.query)) {
+    return res.status(401).json({ error: "Invalid signature" });
+  }
+  try {
+    await connectDB();
+    const { formData } = req.body;
+    if (!formData?.email || !formData?.phone) {
+      return res.status(400).json({ error: "Email and phone are required" });
+    }
+    await Form.create({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      dateOfBirth: formData.dateOfBirth,
+    });
+    res.status(201).json({ message: "Form created successfully" });
+  } catch (e) {
+    console.error("Proxy error:", e.message);
+    res.status(400).json({ error: e.message });
   }
 });
 

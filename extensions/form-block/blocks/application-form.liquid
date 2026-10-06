@@ -1,0 +1,28 @@
+<form id="app-form">
+  <input name="firstName" placeholder="First name" required>
+  <input name="lastName" placeholder="Last name" required>
+  <input name="email" type="email" placeholder="Email" required>
+  <input name="phone" placeholder="Phone" required>
+  <input name="dateOfBirth" type="date">
+  <button type="submit">Submit</button>
+  <p id="app-form-msg"></p>
+</form>
+
+<script>
+  document.getElementById("app-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = Object.fromEntries(new FormData(e.target));
+    const res = await fetch("/apps/form/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ formData }),
+    });
+    document.getElementById("app-form-msg").textContent =
+      res.ok ? "Submitted, thank you!" : "Something went wrong.";
+    if (res.ok) e.target.reset();
+  });
+</script>
+
+{% schema %}
+{ "name": "Application form", "target": "section", "settings": [] }
+{% endschema %}
