@@ -51,28 +51,7 @@ app.get("/api/mongo-test", async (_req, res) => {
   }
 });
 
-function verifyProxy(query) {
-  const { signature, ...rest } = query;
-  if (!signature) return false;
-  const message = Object.keys(rest)
-    .sort()
-    .map((k) => `${k}=${Array.isArray(rest[k]) ? rest[k].join(",") : rest[k]}`)
-    .join("");
-  const digest = crypto
-    .createHmac("sha256", process.env.SHOPIFY_API_SECRET)
-    .update(message)
-    .digest("hex");
-  try {
-    return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
-  } catch {
-    return false;
-  }
-}
-
-app.post("/proxy/submit", express.json(), async (req, res) => {
-  if (!verifyProxy(req.query)) {
-    return res.status(401).json({ error: "Invalid signature" });
-  }
+app.post("/public/submit", express.json(), async (req, res) => {
   try {
     await connectDB();
     const { formData } = req.body;
@@ -88,7 +67,7 @@ app.post("/proxy/submit", express.json(), async (req, res) => {
     });
     res.status(201).json({ message: "Form created successfully" });
   } catch (e) {
-    console.error("Proxy error:", e.message);
+    console.error("Public submit error:", e.message);
     res.status(400).json({ error: e.message });
   }
 });
